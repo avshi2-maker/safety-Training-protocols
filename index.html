@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a3d5c">
+    <title>טופס הדרכת בטיחות - Stonhard @ תמר</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a3d5c;
+            --primary-light: #2d5a7b;
+            --accent: #00a8e1;
+            --success: #70ad47;
+            --warning: #ed7d31;
+            --danger: #e74c3c;
+            --text: #2c3e50;
+            --text-light: #6c757d;
+            --bg: #f5f7fa;
+            --bg-alt: #f8f9fa;
+            --border: #e1e8ed;
+            --shadow: rgba(26,61,92,0.1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            direction: rtl;
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: 120px;
+        }
+
+        /* ── HEADER ─────────────────────────────────────────────────────── */
+        .app-header {
+            background: linear-gradient(135deg, #1a3d5c 0%, #0f2438 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-top {
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .header-badge {
+            background: var(--danger);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0%,100% { opacity:1; }
+            50% { opacity:0.7; }
+        }
+        .header-title { font-size: 20px; font-weight: 800; }
+        .header-sub { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+        .header-law {
+            background: rgba(231,76,60,0.15);
+            border-top: 1px solid rgba(231,76,60,0.3);
+            padding: 10px 24px;
+            font-size: 13px;
+            color: #ff9f9f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ── PROGRESS BAR ────────────────────────────────────────────────── */
+        .progress-container {
+            background: white;
+            padding: 16px 24px;
+            border-bottom: 2px solid var(--border);
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .step-pill {
+            flex: 1;
+            min-width: 70px;
+            padding: 8px 4px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--bg-alt);
+            color: var(--text-light);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .step-pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .step-pill.done {
+            background: #e8f5e9;
+            color: var(--success);
+            border-color: var(--success);
+        }
+        .step-pill .step-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+        .progress-bar-wrap {
+            margin-top: 10px;
+            background: var(--border);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 6px;
+        }
+
+        /* ── MAIN CONTAINER ──────────────────────────────────────────────── */
+        .container { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
+
+        /* ── SECTION CARDS ───────────────────────────────────────────────── */
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px var(--shadow);
+            overflow: hidden;
+            display: none;
+        }
+        .section-card.active { display: block; }
+        .card-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+        .card-title { font-size: 20px; font-weight: 700; color: var(--primary); }
+        .card-subtitle { font-size: 14px; color: var(--text-light); margin-top: 3px; line-height: 1.4; }
+        .card-body { padding: 0 24px 24px; }
+
+        /* ── LAW BOX ─────────────────────────────────────────────────────── */
+        .law-box {
+            background: #fff8f7;
+            border: 1.5px solid #fcc;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .law-box strong { color: var(--danger); }
+        .law-box ul { padding-right: 18px; margin-top: 8px; }
+
+        /* ── FORM ELEMENTS ───────────────────────────────────────────────── */
+        .form-grid { display: grid; gap: 16px; }
+        .form-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+        .form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+        @media(max-width:600px) {
+            .form-grid.cols-2, .form-grid.cols-3 { grid-template-columns: 1fr; }
+        }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .form-group label .req { color: var(--danger); margin-right: 3px; }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            direction: rtl;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: white;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,168,225,0.12);
+        }
+        .form-group textarea { min-height: 80px; resize: vertical; }
+        .form-group input[type="date"],
+        .form-group input[type="time"] { direction: ltr; text-align: right; }
+        .field-hint { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+        /* ── HAZARD CHECKLIST ────────────────────────────────────────────── */
+        .checklist { display: flex; flex-direction: column; gap: 10px; }
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--bg-alt);
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .check-item:hover { border-color: var(--accent); background: #f0f8fd; }
+        .check-item.checked { border-color: var(--success); background: #f0f9ec; }
+        .check-item input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            accent-color: var(--success);
+            cursor: pointer;
+            margin-top: 2px;
+        }
+        .check-label { font-size: 15px; font-weight: 500; line-height: 1.5; }
+        .check-label .check-sub { font-size: 13px; color: var(--text-light); font-weight: 400; display: block; margin-top: 2px; }
+        .check-law { font-size: 11px; color: var(--accent); font-weight: 600; margin-top: 4px; display: block; }
+
+        /* ── MATERIAL TABLE ──────────────────────────────────────────────── */
+        .material-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .material-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 10px;
+            text-align: right;
+            font-weight: 600;
+        }
+        .material-table th:first-child { border-radius: 0 10px 0 0; }
+        .material-table th:last-child { border-radius: 10px 0 0 0; }
+        .material-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); }
+        .material-table tr:last-child td { border-bottom: none; }
+        .material-table tr:nth-child(even) { background: var(--bg-alt); }
+        .material-table td input {
+            width: 100%;
+            padding: 8px;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .material-table td input:focus { outline: none; border-color: var(--accent); }
+        .risk-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .risk-high { background: #ffe0de; color: var(--danger); }
+        .risk-med { background: #fff3de; color: var(--warning); }
+        .risk-low { background: #e8f5e9; color: var(--success); }
+
+        /* ── WORKER TABLE ────────────────────────────────────────────────── */
+        .worker-row { display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr auto; gap: 8px; align-items: center; padding: 12px; background: var(--bg-alt); border-radius: 10px; margin-bottom: 8px; border: 2px solid var(--border); }
+        .worker-row:first-child { background: var(--primary); border-color: var(--primary); }
+        .worker-row:first-child span { color: white; font-weight: 700; font-size: 13px; }
+        @media(max-width:600px) {
+            .worker-row { grid-template-columns: 1fr 1fr; }
+        }
+        .worker-row input {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .worker-row input:focus { outline: none; border-color: var(--accent); }
+        .remove-btn {
+            width: 32px;
+            height: 32px;
+            background: #ffe0de;
+            border: none;
+            border-radius: 8px;
+            color: var(--danger);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .remove-btn:hover { background: #ffbcb8; }
+
+        /* ── SIGNATURE PAD ───────────────────────────────────────────────── */
+        .sig-container { margin-top: 12px; }
+        .sig-canvas {
+            width: 100%;
+            height: 130px;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            background: #fafafa;
+            cursor: crosshair;
+            touch-action: none;
+            display: block;
+        }
+        .sig-canvas.signed { border-color: var(--success); background: #f9fff6; }
+        .sig-controls { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+        .sig-clear {
+            padding: 8px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+        .sig-clear:hover { background: var(--bg-alt); border-color: var(--danger); color: var(--danger); }
+        .sig-status { font-size: 13px; color: var(--text-light); padding: 8px 0; }
+        .sig-status.done { color: var(--success); font-weight: 600; }
+
+        /* ── DIVIDER ─────────────────────────────────────────────────────── */
+        .divider { height: 1px; background: var(--border); margin: 20px 0; }
+        .section-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-label::after { content: ''; flex: 1; height: 2px; background: var(--border); }
+
+        /* ── PHOTO UPLOAD ────────────────────────────────────────────────── */
+        .photo-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-alt);
+        }
+        .photo-zone:hover { border-color: var(--accent); background: #f0f8fd; }
+        .photo-zone input { display: none; }
+        .photo-zone .ph-icon { font-size: 36px; margin-bottom: 8px; }
+        .photo-zone .ph-text { font-size: 15px; color: var(--text-light); }
+        .photo-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+        .photo-preview { width: 90px; height: 90px; object-fit: cover; border-radius: 8px; border: 2px solid var(--border); }
+
+        /* ── BUTTONS ─────────────────────────────────────────────────────── */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 48px;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-light); }
+        .btn-accent { background: var(--accent); color: white; }
+        .btn-accent:hover { background: #0096cc; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #5d9e3a; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-outline { background: white; border: 2px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-sm { padding: 8px 16px; font-size: 14px; min-height: 36px; }
+        .add-row-btn {
+            background: #e8f5fd;
+            color: var(--accent);
+            border: 2px dashed var(--accent);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+        .add-row-btn:hover { background: #d0ecfa; }
+
+        /* ── BOTTOM ACTIONS ──────────────────────────────────────────────── */
+        .bottom-actions {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: white;
+            border-top: 2px solid var(--border);
+            padding: 14px 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 200;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+        }
+        .bottom-nav { display: flex; gap: 10px; }
+
+        /* ── SUMMARY ─────────────────────────────────────────────────────── */
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .summary-box {
+            background: var(--bg-alt);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 2px solid var(--border);
+        }
+        .summary-box .s-val { font-size: 28px; font-weight: 800; color: var(--primary); }
+        .summary-box .s-lbl { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+        .summary-box.good { border-color: var(--success); background: #f0f9ec; }
+        .summary-box.good .s-val { color: var(--success); }
+        .summary-box.warn { border-color: var(--warning); background: #fff8f0; }
+        .summary-box.warn .s-val { color: var(--warning); }
+
+        /* ── ALERT ───────────────────────────────────────────────────────── */
+        .alert {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+        .alert.show { display: flex; align-items: flex-start; gap: 10px; }
+        .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .alert-error { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        .alert-warning { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+
+        /* ── TOAST ───────────────────────────────────────────────────────── */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .toast.show { opacity: 1; }
+
+        @media print {
+            .bottom-actions, .progress-container, .step-pill { display: none !important; }
+            .section-card { display: block !important; page-break-inside: avoid; }
+            body { padding-bottom: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+    <div class="header-top">
+        <div>
+            <div class="header-title">🦺 הדרכת בטיחות רשמית - Stonhard @ תמר</div>
+            <div class="header-sub">יש למלא לפני תחילת כל עבודה באתר | מסמך משפטי מחייב</div>
+        </div>
+        <div class="header-badge">חובה חוקית</div>
+    </div>
+    <div class="header-law">
+        ⚖️ בהתאם לתקנות הבטיחות בעבודה (עבודות בניה), תשמ"ח-1988 | פקודת הבטיחות בעבודה [נוסח חדש], תש"ל-1970 | תקנות ניהול בטיחות, תשנ"ג-1993
+    </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-container">
+    <div class="progress-steps">
+        <div class="step-pill active" onclick="goToStep(1)" id="pill-1"><span class="step-icon">📋</span>פרטים</div>
+        <div class="step-pill" onclick="goToStep(2)" id="pill-2"><span class="step-icon">🚶</span>סיור אתר</div>
+        <div class="step-pill" onclick="goToStep(3)" id="pill-3"><span class="step-icon">⚠️</span>סיכונים</div>
+        <div class="step-pill" onclick="goToStep(4)" id="pill-4"><span class="step-icon">🧪</span>חומרים</div>
+        <div class="step-pill" onclick="goToStep(5)" id="pill-5"><span class="step-icon">♻️</span>פסולת</div>
+        <div class="step-pill" onclick="goToStep(6)" id="pill-6"><span class="step-icon">👷</span>עובדים</div>
+        <div class="step-pill" onclick="goToStep(7)" id="pill-7"><span class="step-icon">✍️</span>חתימות</div>
+        <div class="step-pill" onclick="goToStep(8)" id="pill-8"><span class="step-icon">📄</span>סיכום</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:12.5%"></div></div>
+    <div class="progress-text" id="progressText">שלב 1 מתוך 8</div>
+</div>
+
+<div class="container">
+<div id="toast" class="toast"></div>
+<div id="alertBox" class="alert"></div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STEP 1 — Project & Trainer Details
+══════════════════════════════════════════════════════════════════════ -->
+<div class="section-card active" id="step-1">
+    <div class="card-header">
+        <div class="card-icon" style="background:#e8f4f8;">📋</div>
+        <div>
+            <div class="card-title">פרטי הפרויקט והמדריך</div>
+            <div class="card-subtitle">פרטים כלליים + זהות ממונה הבטיחות המורשה של תמר</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="law-box">
+            <strong>⚖️ דרישה חוקית:</strong> ההדרכה חייבת להתבצע על ידי <strong>ממונה בטיחות מורשה</strong> מחברת תמר בע"מ בלבד, בהתאם לסעיף 4 לתקנות ניהול הבטיחות תשנ"ג-1993. ממונה בטיחות שאינו בעל תעודה בתוקף — הדרכתו אינה מוכרת משפטית.
+        </div>
+
+        <div class="section-label">🏗️ פרטי הפרויקט</div>
+        <div class="form-grid cols-2">
+            <div class="form-group">
+                <label>שם הפרויקט / אתר <span class="req">*</span></label>
+                <input type="text" id="projectName" value="Stonhard Epoxy Flooring — אולם ייצור תמר, קיסריה">
+            </div>
+            <div class="form-group">
+                <label>תאריך ביצוע הדרכה <span class="req">*</span></label>
+                <input type="date" id="trainingDate">
+            </div>
+            <div class="form-group">
+                <label>כתובת האתר <span class="req">*</span></label>
+                <input type="text" id="siteAddress" value="אזור תעשייה קיסריה">
+            </div>
+            <div class="form-group">
+                <label>שעת התחלת הדרכה <span class="req">*</span></label>
+                <input type="time" id="trainingTime">
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">👤 ממונה הבטיחות המורשה — תמר בע"מ</div>
+        <div class="law-box">
+            <strong>⚠️ חשוב:</strong> יש לוודא שממונה הבטיחות הוא עובד <strong>תמר בע"מ בלבד</strong>, בעל תעודת ממונה בטיחות בתוקף שניתנה על ידי משרד העבודה.
+        </div>
+        <div class="form-grid cols-2">
+            <div class="form-group">
+                <label>שם ממונה הבטיחות <span class="req">*</span></label>
+                <input type="text" id="safetyOfficerName" placeholder="שם מלא">
+            </div>
+            <div class="form-group">
+                <label>מספר תעודת ממונה בטיחות <span class="req">*</span></label>
+                <input type="text" id="certNumber" placeholder="מס׳ תעודה רשמי">
+            </div>
+            <div class="form-group">
+                <label>תוקף תעודה <span class="req">*</span></label>
+                <input type="date" id="certExpiry">
+            </div>
+            <div class="form-group">
+                <label>טלפון ממונה בטיחות <span class="req">*</span></label>
+                <input type="tel" id="safetyPhone" placeholder="050-XXXXXXX">
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">🏢 מנהל עבודה — קבלן Stonhard</div>
+        <div class="form-grid cols-2">
+            <div class="form-group">
+                <label>שם מנהל העבודה (Foreman) <span class="req">*</span></label>
+                <input type="text" id="foremanName" placeholder="שם מלא">
+            </div>
+            <div class="form-group">
+                <label>טלפון Foreman <span class="req">*</span></label>
+                <input type="tel" id="foremanPhone" placeholder="050-XXXXXXX">
+            </div>
+            <div class="form-group">
+                <label>שם חברת קבלן <span class="req">*</span></label>
+                <input type="text" id="contractorCompany">
+            </div>
+            <div class="form-group">
+                <label>מספר עובדים בצוות <span class="req">*</span></label>
+                <input type="number" id="workerCount" min="1" placeholder="מספר עובדים">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STEP 2 — Site Walk
+══════════════════════════════════════════════════════════════════════ -->
+<div class="section-card" id="step-2">
+    <div class="card-header">
+        <div class="card-icon" style="background:#e8f5e9;">🚶</div>
+        <div>
+            <div class="card-title">סיור בטיחות באתר</div>
+            <div class="card-subtitle">יש לסייר עם כלל עובדי הצוות ולסמן כל נושא שהוצג ונדון</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="law-box">
+            <strong>⚖️ חובה חוקית:</strong> סיור בטיחות לפני תחילת עבודה הוא חובה לפי תקנות הבטיחות בעבודה (עבודות בנייה), תשמ"ח-1988, תקנה 7. יש לסייר בפועל ולהציג לעובדים את מיקומי הסיכון.
+        </div>
+
+        <div class="section-label">📍 נושאי הסיור</div>
+        <div class="checklist">
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="exits">
+                <div>
+                    <div class="check-label">יציאות חירום ודרכי מילוט
+                        <span class="check-sub">מיקום כל יציאות החירום, שילוט פינוי, תוכנית פינוי</span>
+                        <span class="check-law">תקנה 12 — תקנות הבטיחות בעבודה (עבודות בניה)</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="fire">
+                <div>
+                    <div class="check-label">מיקום מטפי אש ואמצעי כיבוי
+                        <span class="check-sub">ציון מיקום מטפים, פתיחה נכונה, שימוש בחירום</span>
+                        <span class="check-law">תקנות ההתגוננות האזרחית</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="firstaid">
+                <div>
+                    <div class="check-label">ארון עזרה ראשונה ואחראי עזרה ראשונה
+                        <span class="check-sub">מיקום, תוכן הארון, זיהוי אחראי עזרה ראשונה בצוות</span>
+                        <span class="check-law">תקנות עזרה ראשונה, תשמ"ח</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="forbidden">
+                <div>
+                    <div class="check-label">אזורים אסורים לכניסה
+                        <span class="check-sub">אזורי ייצור פעיל, אחסון חומרים מסוכנים, שטחי הגבלה</span>
+                        <span class="check-law">תקנה 6 — ניהול בטיחות תשנ"ג</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="electrical">
+                <div>
+                    <div class="check-label">לוחות חשמל ונקודות חשמל באתר
+                        <span class="check-sub">מיקום לוחות ראשיים, נקודות אספקת חשמל לציוד, הגדרת שימוש מורשה</span>
+                        <span class="check-law">תקנות הבטיחות בעבודה (חשמל), תשמ"ד-1983</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="storage">
+                <div>
+                    <div class="check-label">אזורי אחסון חומרים וציוד
+                        <span class="check-sub">שטח אחסון חומרי אפוקסי, ציוד כבד, פסולת — הפרדה ברורה</span>
+                        <span class="check-law">תקנות חומרים מסוכנים, תשנ"ג</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="forklift">
+                <div>
+                    <div class="check-label">מסלולי מלגזה ורכבים
+                        <span class="check-sub">הגדרת מסלולי תנועת מלגזה, הפרדה מהולכי רגל, אזורי המתנה</span>
+                        <span class="check-law">תקנה 67 — תקנות הבטיחות בעבודה</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="ventilation">
+                <div>
+                    <div class="check-label">אוורור ואיכות אוויר
+                        <span class="check-sub">מיקום פתחי אוורור, שימוש במאווררים לחומרי אפוקסי, בדיקת ריכוז VOC</span>
+                        <span class="check-law">תקנות גהות תעסוקתית, תשנ"א</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="welfare">
+                <div>
+                    <div class="check-label">מתקני רווחה — שירותים, מים, מנוחה
+                        <span class="check-sub">מיקום שירותים, נקודות מים שתייה, אזור מנוחה</span>
+                        <span class="check-law">תקנות הבטיחות בעבודה (מתקנים סניטריים), תשמ"ח</span>
+                    </div>
+                </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="walk" value="mixing">
+                <div>
+                    <div class="check-label">עמדת ערבוב אפוקסי
+                        <span class="check-sub">מיקום עמדת הערבוב, אוורור מקומי, הגבלת כניסה במהלך ערבוב</span>
+                        <span class="check-law">תקנות חומרים מסוכנים</span>
+                    </div>
+                </div>
+            </label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">📸 תיעוד סיור (צלם תמונות)</div>
+        <div class="photo-zone" onclick="document.getElementById('walkPhotos').click()">
+            <input type="file" id="walkPhotos" multiple accept="image/*" onchange="handlePhotos(this,'walkPreview')">
+            <div class="ph-icon">📷</div>
+            <div class="ph-text">לחץ לצילום / בחירת תמונות מסיור הבטיחות</div>
+        </div>
+        <div class="photo-previews" id="walkPreview"></div>
+
+        <div class="divider"></div>
+        <div class="form-group">
+            <label>הערות ממצאי הסיור</label>
+            <textarea id="walkNotes" placeholder="רשום ממצאים מיוחדים שנצפו בסיור, בעיות, הוראות מיוחדות..."></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STEP 3 — Hazards & PPE
+══════════════════════════════════════════════════════════════════════ -->
+<div class="section-card" id="step-3">
+    <div class="card-header">
+        <div class="card-icon" style="background:#fff3e0;">⚠️</div>
+        <div>
+            <div class="card-title">סיכונים ומניעה — ציוד מגן אישי</div>
+            <div class="card-subtitle">זיהוי כל הסיכונים באתר ואישור שימוש בציוד המגן הנדרש</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="law-box">
+            <strong>⚖️ חובה:</strong> לפי תקנות הבטיחות בעבודה (ציוד מגן אישי), תשנ"ז-1997 — על המעסיק לספק ציוד מגן אישי מתאים ועל העובד חובה לעונדו בכל עת.
+        </div>
+
+        <div class="section-label">⚠️ סיכונים ייחודיים לעבודת אפוקסי</div>
+        <div class="checklist">
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="fumes">
+                <div><div class="check-label">נשמת אדים כימיים (VOC)
+                    <span class="check-sub">אדי אפוקסי מסיסי פוליאמין — סיכון כרוני לנשימה | נדרש: מסכת מסנן P3+ABEK</span>
+                    <span class="check-law">גבול חשיפה מקצועית (TLV) לפי תקנות גהות תעסוקתית</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="skin">
+                <div><div class="check-label">מגע עור עם אפוקסי ומקשה
+                    <span class="check-sub">גירוי עור, רגישות (sensitization) בחשיפה חוזרת | נדרש: כפפות ניטריל כפולות + חליפת גוף</span>
+                    <span class="check-law">SDS Section 8 — Stonclad GS</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="eyes">
+                <div><div class="check-label">ניתז לעיניים
+                    <span class="check-sub">סיכון כוויה כימית — נדרש: משקפי בטיחות סגורות (אטומות) + מקלחת עיניים זמינה</span>
+                    <span class="check-law">H319 — Eye Irritation Category 2</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="slip">
+                <div><div class="check-label">החלקה על משטח רטוב / אפוקסי רך
+                    <span class="check-sub">אפוקסי במהלך ייבוש הוא חלקלק מאוד | נדרש: נעלי בטיחות עם פס אנטי-החלקה</span>
+                    <span class="check-law">תקנה 9 — תקנות הבטיחות בעבודה</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="noise">
+                <div><div class="check-label">רעש — מכונות Blastrac והליקופטר
+                    <span class="check-sub">רמת רעש >85dB | נדרש: אטמי אוזניים / אוזניות מגן בכל שלב הפעלת מכונות</span>
+                    <span class="check-law">תקנות מניעת מפגעי רעש, תשנ"ג</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="dust">
+                <div><div class="check-label">אבק בטון (Silica) — שלב Blastrac
+                    <span class="check-sub">אבק סיליקה גביש — סיכון silicosis | נדרש: מסכת P3, שואב תעשייתי HEPA בזמן אמת</span>
+                    <span class="check-law">גבול חשיפה Silica RCS: 0.1 mg/m³</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="fire">
+                <div><div class="check-label">דליקות — ממיסים וחומרי ניקוי
+                    <span class="check-sub">ממיסים בסיס אפוקסי — Flash point <60°C | אסור: עבודה עם אש גלויה, עישון, ניצוצות</span>
+                    <span class="check-law">תקן ישראלי 158 — אחסון נוזלים דליקים</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="machinery">
+                <div><div class="check-label">ציוד מכאני כבד — Blastrac, הליקופטר, עגלת פיזור
+                    <span class="check-sub">סיכון מעיכה, חתכים, נגיעה בחלקים נעים | נדרש: הרחקה 3 מ' מציוד פעיל, אפוד זוהר</span>
+                    <span class="check-law">תקנות בטיחות מכונות, תשכ"ה</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="hazard" value="confined">
+                <div><div class="check-label">סיכון מרחב מוגבל / אוורור לקוי
+                    <span class="check-sub">בחלל סגור עם אפוקסי — ריכוז אדים מסוכן | חובה: ניטור ריכוז + אוורור מכני</span>
+                    <span class="check-law">תקנות עבודה במרחבים מוגבלים, תשנ"א</span>
+                </div></div>
+            </label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">🦺 ציוד מגן אישי — אישור מסירה</div>
+        <div class="checklist">
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="ppe" value="mask"><div><div class="check-label">מסכת מגן — P3+ABEK <span class="check-sub">נמסרה ונבדקה לכל עובד</span></div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="ppe" value="gloves"><div><div class="check-label">כפפות ניטריל — 2 זוגות לעובד <span class="check-sub">כיסוי מלא לאמצע זרוע</span></div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="ppe" value="goggles"><div><div class="check-label">משקפי בטיחות אטומות <span class="check-sub">לא משקפי רגיל — חייבות להיות סגורות</span></div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="ppe" value="boots"><div><div class="check-label">נעלי בטיחות — מגן פלדה + אנטי-החלקה <span class="check-sub">S3 לפי EN ISO 20345</span></div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="ppe" value="suit"><div><div class="check-label">חליפת גוף / סרבל <span class="check-sub">כיסוי מלא של כל עור חשוף</span></div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="ppe" value="ear"><div><div class="check-label">אטמי אוזניים / אוזניות מגן <span class="check-sub">נדרש בשלב הפעלת Blastrac והליקופטר</span></div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="ppe" value="vest"><div><div class="check-label">אפוד זוהר — Hi-Vis <span class="check-sub">נדרש בכל שלבי העבודה</span></div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="ppe" value="helmet"><div><div class="check-label">קסדת בטיחות <span class="check-sub">בשטחים שיש בהם סיכון פגיעה מגובה / ציוד</span></div></div>
+            </label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="form-group">
+            <label>סיכונים נוספים שזוהו באתר</label>
+            <textarea id="additionalHazards" placeholder="ציין סיכונים ספציפיים שזוהו בסיור האתר..."></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STEP 4 — Material Safety (MSDS / SDS)
+══════════════════════════════════════════════════════════════════════ -->
+<div class="section-card" id="step-4">
+    <div class="card-header">
+        <div class="card-icon" style="background:#fce4ec;">🧪</div>
+        <div>
+            <div class="card-title">בטיחות חומרים — גיליונות בטיחות SDS</div>
+            <div class="card-subtitle">הצגה והסבר על כל חומר בשימוש, סיכונים ואמצעי מגון</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="law-box">
+            <strong>⚖️ חובה חוקית:</strong> תקנות החומרים המסוכנים (יידוע, סיווג ואריזה), תשנ"ו-1996 — על המעסיק להציג ולהסביר גיליון בטיחות (SDS/MSDS) לכל חומר מסוכן בפני כל עובד הנחשף אליו. גיליונות הבטיחות חייבים להיות נגישים פיזית באתר.
+        </div>
+
+        <div class="section-label">🧪 חומרי Stonhard — בשימוש בפרויקט זה</div>
+        <div style="overflow-x:auto; border-radius:12px; border:2px solid var(--border);">
+            <table class="material-table">
+                <thead>
+                    <tr>
+                        <th>שם חומר</th>
+                        <th>שימוש</th>
+                        <th>סיכון עיקרי</th>
+                        <th>רמת סיכון</th>
+                        <th>SDS הוצג</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Stonclad GS — רכיב A (Base)</strong></td>
+                        <td>שכבת יסוד אפוקסי</td>
+                        <td>גירוי עור ועיניים, VOC</td>
+                        <td><span class="risk-badge risk-med">בינוני</span></td>
+                        <td><label class="check-item" style="border:none;padding:4px;background:none;" onclick="toggleCheck(this)"><input type="checkbox" name="sds"><span style="font-size:13px;">✅</span></label></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stonclad GS — רכיב B (Hardener)</strong></td>
+                        <td>מקשה אפוקסי — פוליאמין</td>
+                        <td>קורוזיבי לעור, רגישות, אדים מסוכנים</td>
+                        <td><span class="risk-badge risk-high">גבוה</span></td>
+                        <td><label class="check-item" style="border:none;padding:4px;background:none;" onclick="toggleCheck(this)"><input type="checkbox" name="sds"><span style="font-size:13px;">✅</span></label></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stonclad GS — צבע / Pigment</strong></td>
+                        <td>גיוון צבע הרצפה</td>
+                        <td>מגע עור</td>
+                        <td><span class="risk-badge risk-low">נמוך</span></td>
+                        <td><label class="check-item" style="border:none;padding:4px;background:none;" onclick="toggleCheck(this)"><input type="checkbox" name="sds"><span style="font-size:13px;">✅</span></label></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primer — אפוקסי פריימר</strong></td>
+                        <td>שכבת הידבקות לבטון</td>
+                        <td>אדים דליקים, גירוי נשימתי</td>
+                        <td><span class="risk-badge risk-high">גבוה</span></td>
+                        <td><label class="check-item" style="border:none;padding:4px;background:none;" onclick="toggleCheck(this)"><input type="checkbox" name="sds"><span style="font-size:13px;">✅</span></label></td>
+                    </tr>
+                    <tr>
+                        <td><strong>אגרגט — Quartz Sand</strong></td>
+                        <td>חיזוק מכאני, מרקם</td>
+                        <td>אבק סיליקה — silicosis</td>
+                        <td><span class="risk-badge risk-high">גבוה</span></td>
+                        <td><label class="check-item" style="border:none;padding:4px;background:none;" onclick="toggleCheck(this)"><input type="checkbox" name="sds"><span style="font-size:13px;">✅</span></label></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ממיס ניקוי (Epoxy Thinner)</strong></td>
+                        <td>ניקוי ציוד, הסרת שאריות</td>
+                        <td>דליק מאוד, נדיף, VOC</td>
+                        <td><span class="risk-badge risk-high">גבוה</span></td>
+                        <td><label class="check-item" style="border:none;padding:4px;background:none;" onclick="toggleCheck(this)"><input type="checkbox" name="sds"><span style="font-size:13px;">✅</span></label></td>
+                    </tr>
+                    <tr>
+                        <td><strong>אפוקסי גראוט — תיקון סדקים</strong></td>
+                        <td>מילוי סדקים ובורות</td>
+                        <td>גירוי עור</td>
+                        <td><span class="risk-badge risk-med">בינוני</span></td>
+                        <td><label class="check-item" style="border:none;padding:4px;background:none;" onclick="toggleCheck(this)"><input type="checkbox" name="sds"><span style="font-size:13px;">✅</span></label></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">📋 כללי שימוש בטוח בחומרים</div>
+        <div class="checklist">
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="material_rule">
+                <div><div class="check-label">הדרכה על קריאת תוויות חומרים (GHS/CLP)
+                    <span class="check-sub">פירוש כל סמל סיכון (גולגולת, להבה, קורוזיה, חץ וכו')</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="material_rule">
+                <div><div class="check-label">נוהל ערבוב — היחס הנכון בין רכיב A ל-B
+                    <span class="check-sub">ערבוב שגוי = חומר לא מקשה, מסוכן לגישה מוקדמת</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="material_rule">
+                <div><div class="check-label">אחסון נכון — טמפרטורה, הפרדה, אוורור
+                    <span class="check-sub">אחסון בצל, הפרדה מחמרי ניקוי אלקליים, לא מעל 35°C</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="material_rule">
+                <div><div class="check-label">נוהל שפיכה — SPILL RESPONSE
+                    <span class="check-sub">חול ספיגה, לא מים, הרחקה 10 מ' מניצוצות, אוורור מיידי</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="material_rule">
+                <div><div class="check-label">איסור מוחלט — אכילה, שתייה, עישון בזמן עבודה עם חומרים
+                    <span class="check-sub">חובה רחיצת ידיים יסודית לפני הפסקה</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="material_rule">
+                <div><div class="check-label">נוהל חירום — מגע עם עיניים / עור
+                    <span class="check-sub">שטיפה עם מים 15 דקות רצוף, פנייה לרופא, הצגת SDS לצוות רפואי</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="material_rule">
+                <div><div class="check-label">מיקום גיליונות SDS באתר העבודה
+                    <span class="check-sub">ארגז SDS מסומן, נגיש לכל עובד בכל עת, גם בעברית</span>
+                </div></div>
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STEP 5 — Waste Disposal
+══════════════════════════════════════════════════════════════════════ -->
+<div class="section-card" id="step-5">
+    <div class="card-header">
+        <div class="card-icon" style="background:#e8f5e9;">♻️</div>
+        <div>
+            <div class="card-title">פסולת — סילוק וניהול</div>
+            <div class="card-subtitle">הדרכה על הפרדה, אחסון וסילוק פסולת חומרים מסוכנים</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="law-box">
+            <strong>⚖️ חוק פסולת מסוכנת:</strong> חוק פסולת (תשמ"ד-1984) ותקנות פסולת מסוכנת (תנאים לרישיון) תשנ"ג-1993. השלכת פסולת חומרים מסוכנים לאשפה רגילה — עבירה פלילית! קנס עד ₪226,000.
+        </div>
+
+        <div class="section-label">🗂️ הפרדת פסולת לפי סוגים</div>
+        <div class="checklist">
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste">
+                <div><div class="check-label">דליים ריקים של אפוקסי (רכיב A ו-B)
+                    <span class="check-sub">סיווג: <strong>פסולת מסוכנת</strong> — אחסון נפרד, הסרה ע"י קבלן מורשה לפסולת מסוכנת</span>
+                    <span class="check-law">קוד פסולת: 08 01 11 — European Waste Catalogue</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste">
+                <div><div class="check-label">כפפות, מסיכות, כלי עבודה מזוהמים
+                    <span class="check-sub">סיווג: <strong>פסולת מסוכנת</strong> — שקים שחורים מסומנים בנפרד מהאשפה הרגילה</span>
+                    <span class="check-law">תקנות פסולת מסוכנת</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste">
+                <div><div class="check-label">ממיסים ונוזלי ניקוי מזוהמים
+                    <span class="check-sub">סיווג: <strong>פסולת דליקה מסוכנת</strong> — אחסון בפחים אדומים מסומנים, מכוסים, הרחק מניצוצות</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste">
+                <div><div class="check-label">אריזות קרטון וניילון נקיות
+                    <span class="check-sub">סיווג: <strong>פסולת רגילה</strong> — הפרדה לקרטון, ניתן למיחזור</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste">
+                <div><div class="check-label">אבק בטון מהליטוש (Blastrac)
+                    <span class="check-sub">סיווג: <strong>פסולת בנייה</strong> — שאיבה ישירה לשקים אטומים, איסוף מבעוד יום</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste">
+                <div><div class="check-label">אפוקסי שנותר ולא שימש (MIXED)
+                    <span class="check-sub">אפוקסי מעורבב שלא שימש — <strong>לאפשר להתקשות קודם</strong> לפני השלכה כפסולת רגילה</span>
+                </div></div>
+            </label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">📦 ניהול מכולת פסולת באתר</div>
+        <div class="checklist">
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste_mgmt">
+                <div><div class="check-label">מיקום מכולה — הוסכם ומסומן
+                    <span class="check-sub">מכולה אדומה/מסומנת לפסולת מסוכנת, נפרדת ממכולת בנייה רגילה</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste_mgmt">
+                <div><div class="check-label">חיוב מכולה — מוסכם שיקוזז מהחשבון הסופי
+                    <span class="check-sub">לפי הסכם עם הקבלן — קבלת תמר מספקת מכולה, החיוב יקוזז</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste_mgmt">
+                <div><div class="check-label">פינוי פסולת מסוכנת — קבלן מורשה בלבד
+                    <span class="check-sub">יש לוודא רישיון פסולת מסוכנת תקף של חברת הפינוי</span>
+                </div></div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+                <input type="checkbox" name="waste_mgmt">
+                <div><div class="check-label">תיעוד פינוי — תעודת שינוע פסולת מסוכנת
+                    <span class="check-sub">חובה לשמור את תעודת השינוע 5 שנים לפחות</span>
+                </div></div>
+            </label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="form-grid cols-2">
+            <div class="form-group">
+                <label>שם חברת פינוי פסולת מסוכנת</label>
+                <input type="text" id="wasteCompany" placeholder="שם החברה">
+            </div>
+            <div class="form-group">
+                <label>מספר רישיון פסולת מסוכנת</label>
+                <input type="text" id="wasteLicense" placeholder="מס׳ רישיון משרד הגנת הסביבה">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STEP 6 — Worker Training Registration
+══════════════════════════════════════════════════════════════════════ -->
+<div class="section-card" id="step-6">
+    <div class="card-header">
+        <div class="card-icon" style="background:#e3f2fd;">👷</div>
+        <div>
+            <div class="card-title">רישום עובדים — השתתפות בהדרכה</div>
+            <div class="card-subtitle">כל עובד חייב להירשם ולאשר קבלת ההדרכה</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="law-box">
+            <strong>⚖️ חובה:</strong> תיעוד זהות כל עובד שהשתתף בהדרכה הוא חובה חוקית. ללא תיעוד — ההדרכה אינה תקפה משפטית ועובד פצוע יכול לתבוע שלא הודרך.
+        </div>
+
+        <div class="section-label">👷 רשימת העובדים שהשתתפו בהדרכה</div>
+
+        <div id="workersListHeader" class="worker-row">
+            <span>שם מלא</span>
+            <span>ת.ז. / דרכון</span>
+            <span>מקצוע / תפקיד</span>
+            <span>שפה מובנת</span>
+            <span></span>
+        </div>
+
+        <div id="workersList">
+            <!-- Workers added dynamically -->
+        </div>
+
+        <button class="add-row-btn" onclick="addWorker()">➕ הוסף עובד</button>
+
+        <div class="divider"></div>
+        <div class="law-box" style="background:#e8f5e9; border-color:#a5d6a7;">
+            <strong>✅ אישור עובד זר / שפת הדרכה:</strong> אם ישנם עובדים שאינם דוברי עברית — חובה לבצע הדרכה בשפתם (רוסית, ערבית, אנגלית, פיליפינית וכו') או באמצעות מתורגמן מוסמך. יש לציין בעמודת "שפה מובנת".
+        </div>
+
+        <div class="form-group">
+            <label>סה"כ עובדים שהשתתפו: <strong id="totalWorkersBadge">0</strong></label>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STEP 7 — Signatures
+══════════════════════════════════════════════════════════════════════ -->
+<div class="section-card" id="step-7">
+    <div class="card-header">
+        <div class="card-icon" style="background:#f3e5f5;">✍️</div>
+        <div>
+            <div class="card-title">חתימות רשמיות ואישור</div>
+            <div class="card-subtitle">חתימת ממונה הבטיחות + חתימת Foreman + חתימות כל העובדים</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="law-box">
+            <strong>⚖️ תוקף משפטי:</strong> טופס זה הוא מסמך משפטי מחייב. חתימת ממונה הבטיחות מעידה שבצע את ההדרכה בהתאם לחוק. חתימת כל עובד מעידה שהודרך, הבין ויישם. שמור מסמך זה 7 שנים לפחות.
+        </div>
+
+        <!-- Safety Officer Signature -->
+        <div class="section-label">👤 חתימת ממונה הבטיחות — תמר בע"מ</div>
+        <div class="form-grid cols-2" style="margin-bottom:12px;">
+            <div class="form-group">
+                <label>שם ממונה הבטיחות</label>
+                <input type="text" id="sig-so-name" placeholder="יתמלא אוטומטית מהשלב הראשון">
+            </div>
+            <div class="form-group">
+                <label>תאריך ושעת חתימה</label>
+                <input type="datetime-local" id="sig-so-datetime">
+            </div>
+        </div>
+        <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">חתימה:</label>
+        <canvas id="sig-safety-officer" class="sig-canvas" width="1200" height="200"></canvas>
+        <div class="sig-controls">
+            <button class="sig-clear" onclick="clearSig('sig-safety-officer')">🗑️ נקה חתימה</button>
+            <span class="sig-status" id="status-safety-officer">ממתין לחתימה...</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Foreman Signature -->
+        <div class="section-label">🔨 חתימת מנהל העבודה — Foreman</div>
+        <div class="form-grid cols-2" style="margin-bottom:12px;">
+            <div class="form-group">
+                <label>שם ה-Foreman</label>
+                <input type="text" id="sig-fm-name" placeholder="יתמלא אוטומטית">
+            </div>
+            <div class="form-group">
+                <label>תאריך ושעת חתימה</label>
+                <input type="datetime-local" id="sig-fm-datetime">
+            </div>
+        </div>
+        <label style="font-size:14px; font-weight:600; display:block; margin-bottom:6px;">חתימה:</label>
+        <canvas id="sig-foreman" class="sig-canvas" width="1200" height="200"></canvas>
+        <div class="sig-controls">
+            <button class="sig-clear" onclick="clearSig('sig-foreman')">🗑️ נקה חתימה</button>
+            <span class="sig-status" id="status-foreman">ממתין לחתימה...</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Per-worker signatures -->
+        <div class="section-label">👷 חתימת כל עובד — אישור קבלת הדרכה</div>
+        <div id="workerSigArea">
+            <p style="color:var(--text-light); font-size:14px;">חזור לשלב 6 והוסף עובדים תחילה...</p>
+        </div>
+
+        <div class="divider"></div>
+        <div style="background:#e8f5e9; border:2px solid var(--success); border-radius:12px; padding:20px; font-size:14px; line-height:1.7;">
+            <strong style="font-size:16px; color:var(--success);">✅ הצהרת ממונה הבטיחות:</strong><br><br>
+            אני, ממונה הבטיחות המורשה החתום מטה, מאשר כי ביצעתי הדרכת בטיחות מלאה לפי חוק לכלל עובדי הצוות המפורטים לעיל. כל עובד הובן לו תוכן ההדרכה בשפה שהוא מבין, בוצע סיור בטיחות באתר, הוצגו גיליונות הבטיחות (SDS) וכל עובד קיבל ציוד מגן אישי מתאים.
+            <br><br>
+            הדרכה זו בוצעה בהתאם לתקנות הבטיחות בעבודה (עבודות בנייה), תשמ"ח-1988, פקודת הבטיחות בעבודה, ותקנות ניהול הבטיחות, תשנ"ג-1993.
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STEP 8 — Summary & Export
+══════════════════════════════════════════════════════════════════════ -->
+<div class="section-card" id="step-8">
+    <div class="card-header">
+        <div class="card-icon" style="background:#e8f5e9;">📄</div>
+        <div>
+            <div class="card-title">סיכום וייצוא</div>
+            <div class="card-subtitle">סקירת טופס ההדרכה לפני שמירה והפקת PDF</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="summaryContent">
+            <!-- Generated dynamically -->
+        </div>
+
+        <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:24px;">
+            <button class="btn btn-primary" onclick="window.print()" style="flex:1; min-width:180px;">
+                🖨️ הדפס / שמור PDF
+            </button>
+            <button class="btn btn-success" onclick="saveForm()" style="flex:1; min-width:180px;">
+                💾 שמור טיוטה
+            </button>
+            <button class="btn btn-accent" onclick="exportJSON()" style="flex:1; min-width:180px;">
+                📤 ייצא נתונים
+            </button>
+        </div>
+
+        <div style="background:#fff3e0; border:2px solid var(--warning); border-radius:12px; padding:20px; margin-top:20px; font-size:14px; line-height:1.7;">
+            <strong>⚠️ הוראות שמירה:</strong><br>
+            • שמור עותק מודפס חתום בתיק הפרויקט<br>
+            • שמור עותק PDF בדואר אלקטרוני / ענן<br>
+            • שמירת המסמך: <strong>7 שנים לפחות</strong> (חוק מרשם הפלילי)<br>
+            • העתק חייב להיות נגיש בכל רגע לבדיקת פקח עבודה
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- BOTTOM ACTIONS -->
+<div class="bottom-actions">
+    <button class="btn btn-outline btn-sm" id="btnPrev" onclick="prevStep()" style="display:none;">
+        ← הקודם
+    </button>
+    <div style="font-size:14px; color:var(--text-light);" id="stepLabel">שלב 1 / 8</div>
+    <button class="btn btn-primary btn-sm" id="btnNext" onclick="nextStep()">
+        הבא ←
+    </button>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
+let currentStep = 1;
+const totalSteps = 8;
+let workers = [];
+let signaturePads = {};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+    // Set today's date and current time
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+    const timeStr = now.toTimeString().slice(0,5);
+    document.getElementById('trainingDate').value = dateStr;
+    document.getElementById('trainingTime').value = timeStr;
+
+    const dtStr = dateStr + 'T' + timeStr;
+    document.getElementById('sig-so-datetime').value = dtStr;
+    document.getElementById('sig-fm-datetime').value = dtStr;
+
+    // Add 3 blank workers to start
+    addWorker(); addWorker(); addWorker();
+
+    // Init signature pads
+    initSigPad('sig-safety-officer');
+    initSigPad('sig-foreman');
+
+    // Load saved data if any
+    loadSaved();
+
+    updateProgress();
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────────────────────────────────────
+function goToStep(n) {
+    document.getElementById(`step-${currentStep}`).classList.remove('active');
+    document.getElementById(`pill-${currentStep}`).classList.remove('active');
+    document.getElementById(`pill-${currentStep}`).classList.add('done');
+    currentStep = n;
+    document.getElementById(`step-${currentStep}`).classList.add('active');
+    document.getElementById(`pill-${currentStep}`).classList.remove('done');
+    document.getElementById(`pill-${currentStep}`).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+    updateProgress();
+    if (n === 7) syncSigNames();
+    if (n === 8) buildSummary();
+}
+
+function nextStep() { if (currentStep < totalSteps) goToStep(currentStep + 1); }
+function prevStep() { if (currentStep > 1) goToStep(currentStep - 1); }
+
+function updateProgress() {
+    const pct = (currentStep / totalSteps) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `שלב ${currentStep} מתוך ${totalSteps}`;
+    document.getElementById('stepLabel').textContent = `שלב ${currentStep} / ${totalSteps}`;
+    document.getElementById('btnPrev').style.display = currentStep > 1 ? 'inline-flex' : 'none';
+    document.getElementById('btnNext').textContent = currentStep === totalSteps ? '✅ סיים' : 'הבא ←';
+    if (currentStep === totalSteps) {
+        document.getElementById('btnNext').onclick = () => {};
+        document.getElementById('btnNext').style.background = 'var(--success)';
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CHECKLIST TOGGLE
+// ─────────────────────────────────────────────────────────────────────────────
+function toggleCheck(el) {
+    const cb = el.querySelector('input[type="checkbox"]');
+    if (!cb) return;
+    // let the browser handle the check change
+    setTimeout(() => {
+        el.classList.toggle('checked', cb.checked);
+    }, 0);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WORKERS
+// ─────────────────────────────────────────────────────────────────────────────
+function addWorker() {
+    const id = Date.now() + Math.random();
+    workers.push(id);
+    const list = document.getElementById('workersList');
+    const row = document.createElement('div');
+    row.className = 'worker-row';
+    row.id = `worker-${id}`;
+    row.innerHTML = `
+        <input type="text" placeholder="שם מלא" data-field="name">
+        <input type="text" placeholder="מספר ת.ז." data-field="id">
+        <input type="text" placeholder="תפקיד" data-field="role">
+        <input type="text" placeholder="עברית / English / العربية" data-field="lang">
+        <button class="remove-btn" onclick="removeWorker('${id}')">×</button>`;
+    list.appendChild(row);
+    updateWorkerCount();
+    updateWorkerSigs();
+}
+
+function removeWorker(id) {
+    workers = workers.filter(w => w !== id);
+    const el = document.getElementById(`worker-${id}`);
+    if (el) el.remove();
+    updateWorkerCount();
+    updateWorkerSigs();
+}
+
+function updateWorkerCount() {
+    const rows = document.querySelectorAll('#workersList .worker-row');
+    document.getElementById('totalWorkersBadge').textContent = rows.length;
+}
+
+function getWorkerData() {
+    return Array.from(document.querySelectorAll('#workersList .worker-row')).map(row => ({
+        name: row.querySelector('[data-field="name"]')?.value || '',
+        id:   row.querySelector('[data-field="id"]')?.value || '',
+        role: row.querySelector('[data-field="role"]')?.value || '',
+        lang: row.querySelector('[data-field="lang"]')?.value || ''
+    }));
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WORKER SIGNATURES — auto-generated on step 7
+// ─────────────────────────────────────────────────────────────────────────────
+function updateWorkerSigs() {
+    const area = document.getElementById('workerSigArea');
+    if (!area) return;
+    const wdata = getWorkerData().filter(w => w.name);
+    if (!wdata.length) {
+        area.innerHTML = '<p style="color:var(--text-light);font-size:14px;">חזור לשלב 6 והוסף עובדים תחילה...</p>';
+        return;
+    }
+    area.innerHTML = '';
+    wdata.forEach((w, i) => {
+        const block = document.createElement('div');
+        block.style.cssText = 'margin-bottom:24px; padding:16px; background:var(--bg-alt); border-radius:12px; border:2px solid var(--border);';
+        const sigId = `sig-worker-${i}`;
+        block.innerHTML = `
+            <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
+                <div><strong>${w.name}</strong></div>
+                <div style="color:var(--text-light); font-size:13px;">ת.ז: ${w.id || '—'}</div>
+                <div style="color:var(--text-light); font-size:13px;">תפקיד: ${w.role || '—'}</div>
+            </div>
+            <div style="font-size:13px; margin-bottom:8px; color:var(--text-light);">
+                אני מאשר/ת שקיבלתי הדרכת בטיחות מלאה, הבנתי את הסיכונים וקיבלתי ציוד מגן אישי:
+            </div>
+            <canvas id="${sigId}" class="sig-canvas" width="1200" height="160"></canvas>
+            <div class="sig-controls">
+                <button class="sig-clear" onclick="clearSig('${sigId}')">🗑️ נקה</button>
+                <span class="sig-status" id="status-${sigId}">ממתין לחתימה...</span>
+            </div>`;
+        area.appendChild(block);
+        setTimeout(() => initSigPad(sigId), 100);
+    });
+}
+
+function syncSigNames() {
+    const soName = document.getElementById('safetyOfficerName')?.value;
+    const fmName = document.getElementById('foremanName')?.value;
+    if (soName) document.getElementById('sig-so-name').value = soName;
+    if (fmName) document.getElementById('sig-fm-name').value = fmName;
+    updateWorkerSigs();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SIGNATURE PAD
+// ─────────────────────────────────────────────────────────────────────────────
+function initSigPad(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || signaturePads[canvasId]) return;
+
+    // Resize canvas to display size
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width > 0) {
+        canvas.width  = rect.width  * window.devicePixelRatio;
+        canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+    }
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    ctx.strokeStyle = '#1a3d5c';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    let drawing = false, lastX = 0, lastY = 0, hasMark = false;
+
+    function getPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const touch = e.touches ? e.touches[0] : e;
+        return { x: touch.clientX - r.left, y: touch.clientY - r.top };
+    }
+
+    function start(e) { e.preventDefault(); drawing = true; const p = getPos(e); lastX = p.x; lastY = p.y; }
+    function move(e) {
+        e.preventDefault();
+        if (!drawing) return;
+        const p = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        lastX = p.x; lastY = p.y;
+        hasMark = true;
+        canvas.classList.add('signed');
+        const statusEl = document.getElementById('status-' + canvasId);
+        if (statusEl) { statusEl.textContent = '✅ חתום'; statusEl.className = 'sig-status done'; }
+    }
+    function stop() { drawing = false; }
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    canvas.addEventListener('mouseup', stop);
+    canvas.addEventListener('mouseleave', stop);
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove',  move,  { passive: false });
+    canvas.addEventListener('touchend',   stop);
+
+    signaturePads[canvasId] = { ctx, canvas, hasMark: () => hasMark };
+}
+
+function clearSig(canvasId) {
+    const pad = signaturePads[canvasId];
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+    canvas.classList.remove('signed');
+    delete signaturePads[canvasId];
+    const statusEl = document.getElementById('status-' + canvasId);
+    if (statusEl) { statusEl.textContent = 'ממתין לחתימה...'; statusEl.className = 'sig-status'; }
+    setTimeout(() => initSigPad(canvasId), 50);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHOTOS
+// ─────────────────────────────────────────────────────────────────────────────
+function handlePhotos(input, previewId) {
+    const preview = document.getElementById(previewId);
+    Array.from(input.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'photo-preview';
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SUMMARY
+// ─────────────────────────────────────────────────────────────────────────────
+function buildSummary() {
+    const walkChecked  = document.querySelectorAll('input[name="walk"]:checked').length;
+    const walkTotal    = document.querySelectorAll('input[name="walk"]').length;
+    const hazChecked   = document.querySelectorAll('input[name="hazard"]:checked').length;
+    const hazTotal     = document.querySelectorAll('input[name="hazard"]').length;
+    const ppeChecked   = document.querySelectorAll('input[name="ppe"]:checked').length;
+    const ppeTotal     = document.querySelectorAll('input[name="ppe"]').length;
+    const matChecked   = document.querySelectorAll('input[name="material_rule"]:checked').length;
+    const matTotal     = document.querySelectorAll('input[name="material_rule"]').length;
+    const wasteChecked = document.querySelectorAll('input[name="waste"]:checked, input[name="waste_mgmt"]:checked').length;
+    const wasteTotal   = document.querySelectorAll('input[name="waste"], input[name="waste_mgmt"]').length;
+    const workerCount  = document.querySelectorAll('#workersList .worker-row').length;
+    const soName       = document.getElementById('safetyOfficerName')?.value || '—';
+    const date         = document.getElementById('trainingDate')?.value || '—';
+    const site         = document.getElementById('projectName')?.value || '—';
+
+    const allOk = walkChecked === walkTotal && hazChecked === hazTotal &&
+                  ppeChecked === ppeTotal && matChecked === matTotal;
+
+    document.getElementById('summaryContent').innerHTML = `
+        <div style="background:${allOk ? '#e8f5e9' : '#fff8e1'}; border:2px solid ${allOk ? 'var(--success)' : 'var(--warning)'}; 
+             border-radius:14px; padding:20px; margin-bottom:20px; text-align:center;">
+            <div style="font-size:48px;">${allOk ? '✅' : '⚠️'}</div>
+            <div style="font-size:20px; font-weight:800; color:${allOk ? 'var(--success)' : 'var(--warning)'}; margin-top:8px;">
+                ${allOk ? 'הדרכה הושלמה בהצלחה!' : 'ישנם סעיפים שלא הושלמו'}
+            </div>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-box ${walkChecked===walkTotal?'good':'warn'}">
+                <div class="s-val">${walkChecked}/${walkTotal}</div>
+                <div class="s-lbl">🚶 נושאי סיור</div>
+            </div>
+            <div class="summary-box ${hazChecked===hazTotal?'good':'warn'}">
+                <div class="s-val">${hazChecked}/${hazTotal}</div>
+                <div class="s-lbl">⚠️ סיכונים וציוד מגן</div>
+            </div>
+            <div class="summary-box ${matChecked===matTotal?'good':'warn'}">
+                <div class="s-val">${matChecked}/${matTotal}</div>
+                <div class="s-lbl">🧪 כללי חומרים</div>
+            </div>
+            <div class="summary-box ${wasteChecked===wasteTotal?'good':'warn'}">
+                <div class="s-val">${wasteChecked}/${wasteTotal}</div>
+                <div class="s-lbl">♻️ ניהול פסולת</div>
+            </div>
+            <div class="summary-box good">
+                <div class="s-val">${workerCount}</div>
+                <div class="s-lbl">👷 עובדים רשומים</div>
+            </div>
+        </div>
+
+        <table style="width:100%; font-size:14px; border-collapse:collapse; margin-top:8px;">
+            <tr style="background:var(--bg-alt);">
+                <td style="padding:10px; font-weight:600; border-bottom:1px solid var(--border);">📍 אתר</td>
+                <td style="padding:10px; border-bottom:1px solid var(--border);">${site}</td>
+            </tr>
+            <tr>
+                <td style="padding:10px; font-weight:600; border-bottom:1px solid var(--border);">📅 תאריך הדרכה</td>
+                <td style="padding:10px; border-bottom:1px solid var(--border);">${date}</td>
+            </tr>
+            <tr style="background:var(--bg-alt);">
+                <td style="padding:10px; font-weight:600; border-bottom:1px solid var(--border);">👤 ממונה בטיחות</td>
+                <td style="padding:10px; border-bottom:1px solid var(--border);">${soName}</td>
+            </tr>
+            <tr>
+                <td style="padding:10px; font-weight:600;">👷 מס׳ עובדים שהודרכו</td>
+                <td style="padding:10px;">${workerCount}</td>
+            </tr>
+        </table>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SAVE / LOAD
+// ─────────────────────────────────────────────────────────────────────────────
+function saveForm() {
+    try {
+        const data = {
+            saved: new Date().toISOString(),
+            projectName: document.getElementById('projectName')?.value,
+            trainingDate: document.getElementById('trainingDate')?.value,
+            safetyOfficerName: document.getElementById('safetyOfficerName')?.value,
+            workers: getWorkerData(),
+        };
+        localStorage.setItem('safetyTraining_draft', JSON.stringify(data));
+        showToast('✅ טיוטה נשמרה!');
+    } catch(e) { showToast('שגיאה בשמירה'); }
+}
+
+function loadSaved() {
+    try {
+        const saved = localStorage.getItem('safetyTraining_draft');
+        if (!saved) return;
+        const data = JSON.parse(saved);
+        if (data.projectName) document.getElementById('projectName').value = data.projectName;
+        if (data.safetyOfficerName) document.getElementById('safetyOfficerName').value = data.safetyOfficerName;
+    } catch(e) {}
+}
+
+function exportJSON() {
+    const data = {
+        exported: new Date().toISOString(),
+        project: document.getElementById('projectName')?.value,
+        date: document.getElementById('trainingDate')?.value,
+        safetyOfficer: document.getElementById('safetyOfficerName')?.value,
+        certNumber: document.getElementById('certNumber')?.value,
+        workers: getWorkerData(),
+        walkChecked: Array.from(document.querySelectorAll('input[name="walk"]:checked')).map(c => c.value),
+        hazards: Array.from(document.querySelectorAll('input[name="hazard"]:checked')).map(c => c.value),
+        ppe: Array.from(document.querySelectorAll('input[name="ppe"]:checked')).map(c => c.value),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `safety_training_${data.date || 'draft'}.json`;
+    a.click();
+    showToast('📤 קובץ ייוצא!');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
